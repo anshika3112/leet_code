@@ -1,27 +1,43 @@
 class Solution {
 public:
-    int daysBetweenDates(string date1, string date2) {
-       int year1, month1, day1, year2, month2, day2;
+    int daysBetweenDates(std::string date1, std::string date2) {
+        
+
+        int year1, month1, day1, year2, month2, day2;
         sscanf(date1.c_str(), "%d-%d-%d", &year1, &month1, &day1);
         sscanf(date2.c_str(), "%d-%d-%d", &year2, &month2, &day2);
+
+        int days1 = daysSinceEpoch(year1, month1, day1);
+        int days2 = daysSinceEpoch(year2, month2, day2);
+
+        return std::abs(days2 - days1);
+    }
+
+private:
+    int daysSinceEpoch(int year, int month, int day) {
         std::map<int, int> daysInMonth = {
             {1, 31}, {2, 28}, {3, 31}, {4, 30}, {5, 31}, {6, 30},
             {7, 31}, {8, 31}, {9, 30}, {10, 31}, {11, 30}, {12, 31}
         };
-        int days1 = year1 * 365 + day1;
-         for (int i = 1; i < month1; ++i) {
-            days1 += daysInMonth[i];
+        int days = day - 1;
+
+        for (int y = 1970; y < year; ++y) {
+            days += isLeapYear(y) ? 366 : 365;
         }
-        if (month1 > 2 && ((year1 % 4 == 0 && year1 % 100 != 0) || year1 % 400 == 0)) {
-            days1 += 1; 
-        } 
-        int days2 = year2 * 365 + day2;
-        for (int i = 1; i < month2; ++i) {
-            days2 += daysInMonth[i];
+
+        for (int m = 1; m < month; ++m) {
+            days += daysInMonth[m];
+            if (m == 2 && isLeapYear(year)) {
+                days += 1; // Leap year adjustment for February
+            }
         }
-        if (month2 > 2 && ((year2 % 4 == 0 && year2 % 100 != 0) || year2 % 400 == 0)) {
-            days2 += 1;
-        }
-        return abs(days2-days1);
+
+        return days;
+    }
+
+    bool isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
     }
 };
+
+
