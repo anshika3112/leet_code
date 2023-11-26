@@ -1,14 +1,23 @@
 class Solution {
 public:
     int alternateDigitSum(int n) {
-        int sum = 0;
-        int sign = 1; // Start with positive sign for the most significant digit
-        while (n > 0) {
-            int digit = n % 10;
-            sum += sign * digit;
-            sign = -sign; // Toggle the sign for the next digit
-            n /= 10;
+        vector<int> v;
+        int ans=0;
+        //storing n in vector v
+        while(n>0)
+        {
+            v.push_back(n%10);
+            n=n/10;
         }
-        return sum;
+        reverse(v.begin(),v.end());
+        //adding values at even indices and subtracting at odd indices.
+        for(int i=0; i<v.size();i++)
+        {
+            if(i%2==0)
+                ans+=v[i];
+            else
+                ans-=v[i];
+        }
+        return ans;
     }
 };
